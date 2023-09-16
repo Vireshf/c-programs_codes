@@ -1,0 +1,53 @@
+int minLength(int arr[], int n) 
+{
+    int maxNum = INT_MIN;
+    for(int i=0;i<n;i++)
+    {
+        if(arr[i] > maxNum)
+        {
+            maxNum = arr[i];
+        }
+    }
+    
+    int minNum = INT_MAX;
+    for(int i=0;i<n;i++)
+    {
+        if(arr[i] < minNum)
+        {
+            minNum = arr[i];
+        }
+    }
+    
+    bool flag = false;
+    int minI = -1;
+    int maxI = -1;
+    int ans = INT_MAX;
+
+    for(int i=0;i<n;i++) // 2 2 6 4 5 1 1 2 6 4 3 4 1
+    {
+        if(arr[i] == minNum)
+        {
+            minI = i;
+            if(maxI > -1)
+            {
+                ans = min(ans, minI - maxI + 1);
+            }
+        }
+        else if(arr[i] == maxNum)
+        {
+            maxI = i;
+            if(minI > -1)
+            {
+                ans = min(ans, maxI - minI + 1);
+            }
+        }
+    }
+    return ans;
+}
+
+int main()
+{
+    int arr[] = {1, 2, 3, 4, 3, 3, 4};
+    int n = sizeof(arr)/sizeof(arr[0]);
+    cout<<"max number and min number present in subarray length: "<<minLength(arr, n)<<endl;
+}
