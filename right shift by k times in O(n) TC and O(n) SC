@@ -1,0 +1,102 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <bits/stdc++.h>
+
+using namespace std;
+
+
+bool GetProcessStatInfo (pid_t pid)
+{
+    bool retValue = false;
+	std::ostringstream file_name;
+	file_name << "/proc/" << pid << "/stat";
+	std::ifstream file;
+    file.exceptions(std::ifstream::badbit | std::ifstream::failbit);
+    try 
+	{
+        file.open(file_name.str().c_str());
+        if (file.is_open() && (file.peek() != std::ifstream::traits_type::eof()))
+        {
+		    std::string dum;
+		    std::string process_name;
+            file >> dum;      // pid
+	        file >> process_name; // comm
+	        // Strip off leading and trailing parentheses.
+	        if (process_name.size() >= 2 &&
+		                        process_name[0] == '('   &&
+		          process_name[process_name.size() - 1] == ')')
+	        {
+			    process_name = process_name.substr(1, process_name.size() - 2);
+		    }
+		    // Skip the next 11 fields - state, ppid, pgrp,
+		    // session, tty, tpgid, flags, minflt, cminflt,
+		    // majflt, cmajflt.
+		    for (int i = 0; i < 11; ++i) 
+		    {
+			    file >> dum;
+		    }
+  		    unsigned long user, system,total_memory;
+ 		    file >> user;
+		    file >> system;
+		    // Skip the next 6 fields - cutime, cstime, counter,
+		    // priority, timeout, itrealvalue.
+  		    for (int i = 0; i < 6; ++i) 
+		    {
+ 			    file >> dum;
+            }
+ 		    unsigned long start_time,v_size,rss;
+ 		    file >> start_time;
+		    file >> v_size;
+		    file >> rss;
+		  //  pidStatInfo->pid = pid;
+		  //  pidStatInfo->processName = process_name;
+		  //  pidStatInfo-> start_time = start_time;
+		  //  pidStatInfo-> cpu_usage_user = user;
+		  //  pidStatInfo-> cpu_usage_system = system;
+		  //  pidStatInfo-> memory_usage = rss;
+		    retValue = true;
+	    }
+	}
+    catch (...) {}
+    return retValue;
+}
+
+void rightShift(int arr[], int n, int k, int temp1[])
+{
+    //int temp1[n] = {0};
+    int i;
+    int m = 0;
+    for(i=n-k;i<n;i++)
+    {
+        temp1[m++] = arr[i];
+    }
+    
+    for(int j=0;j<k;j++)
+    {
+        temp1[m++] = arr[j];
+    }
+    //return temp1;
+}
+
+int main()
+{
+    //cout<<"Hello World";
+    //cout<<GetProcessStatInfo(1023);
+    int arr[] = {3,-2,1,4,6,9,8};
+    int k = 3;
+    int n = sizeof(arr)/sizeof(arr[0]);
+    int temp[n] = {0};
+    rightShift(arr, n, 3, temp);
+    
+    for(int i=0;i<n;i++)
+    {
+        cout<<temp[i]<<" ";
+    }
+    return 0;
+}
