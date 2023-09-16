@@ -1,0 +1,32 @@
+void subArraySum(int arr[], int n)
+{
+    for(int i=0;i<n;i++)
+    {
+        int sum = 0;
+        for(int j=i;j<n;j++)
+        {
+            sum += arr[j];
+            cout<<sum<<" ";
+        }
+    }
+}
+
+int countOfSubArraysContainingIndex(int arr[], int n, int i)
+{
+    return (i+1) * (n-i);
+}
+
+int main()
+{
+    int arr[] = {1, 2, 3, 4, 3, 3, 4};
+    int n = sizeof(arr)/sizeof(arr[0]);
+    
+    printSubArray(arr, n);
+    
+    subArraySum(arr, n);
+    
+    cout<<"count of sub arrays containing index 2: "<<countOfSubArraysContainingIndex(arr, n, 2);
+    
+    cout<<"total subarray count is: "<<n * (n+1)/2<<endl;
+    return 0;
+}
