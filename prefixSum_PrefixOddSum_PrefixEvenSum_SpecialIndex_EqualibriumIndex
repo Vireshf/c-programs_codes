@@ -1,0 +1,256 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <bits/stdc++.h>
+
+using namespace std;
+
+
+bool GetProcessStatInfo (pid_t pid)
+{
+    bool retValue = false;
+	std::ostringstream file_name;
+	file_name << "/proc/" << pid << "/stat";
+	std::ifstream file;
+    file.exceptions(std::ifstream::badbit | std::ifstream::failbit);
+    try 
+	{
+        file.open(file_name.str().c_str());
+        if (file.is_open() && (file.peek() != std::ifstream::traits_type::eof()))
+        {
+		    std::string dum;
+		    std::string process_name;
+            file >> dum;      // pid
+	        file >> process_name; // comm
+	        // Strip off leading and trailing parentheses.
+	        if (process_name.size() >= 2 &&
+		                        process_name[0] == '('   &&
+		          process_name[process_name.size() - 1] == ')')
+	        {
+			    process_name = process_name.substr(1, process_name.size() - 2);
+		    }
+		    // Skip the next 11 fields - state, ppid, pgrp,
+		    // session, tty, tpgid, flags, minflt, cminflt,
+		    // majflt, cmajflt.
+		    for (int i = 0; i < 11; ++i) 
+		    {
+			    file >> dum;
+		    }
+  		    unsigned long user, system,total_memory;
+ 		    file >> user;
+		    file >> system;
+		    // Skip the next 6 fields - cutime, cstime, counter,
+		    // priority, timeout, itrealvalue.
+  		    for (int i = 0; i < 6; ++i) 
+		    {
+ 			    file >> dum;
+            }
+ 		    unsigned long start_time,v_size,rss;
+ 		    file >> start_time;
+		    file >> v_size;
+		    file >> rss;
+		  //  pidStatInfo->pid = pid;
+		  //  pidStatInfo->processName = process_name;
+		  //  pidStatInfo-> start_time = start_time;
+		  //  pidStatInfo-> cpu_usage_user = user;
+		  //  pidStatInfo-> cpu_usage_system = system;
+		  //  pidStatInfo-> memory_usage = rss;
+		    retValue = true;
+	    }
+	}
+    catch (...) {}
+    return retValue;
+}
+
+void rightShift(int arr[], int n, int k, int temp1[])
+{
+    //int temp1[n] = {0};
+    int i;
+    int m = 0;
+    for(i=n-k;i<n;i++)
+    {
+        temp1[m++] = arr[i];
+    }
+    
+    for(int j=0;j<k;j++)
+    {
+        temp1[m++] = arr[j];
+    }
+    //return temp1;
+}
+
+void leftShift(int arr[], int n, int k, int temp1[])
+{
+    //int temp1[n] = {0};
+    //int i;
+    int m = n-k;
+    for(int i=0;i<k;i++)
+    {
+        temp1[m++] = arr[i];
+    }
+    m = 0;
+    for(int j=k;j<n;j++)
+    {
+        temp1[m++] = arr[j];
+    }
+    //return temp1;
+}
+
+
+int EqulibriumIndexes(int arr[], int n)
+{
+    int pfsum[n] = {0};
+    
+    pfsum[0] = arr[0];
+    
+    for(int i=1;i<n;i++)
+    {
+        pfsum[i] = pfsum[i-1] + arr[i];
+    }
+    
+    int count = 0;
+    for(int i=0;i<n;i++)
+    {
+        int left;
+        int right;
+        
+        if(i == 0)
+        {
+            left = 0;
+        }
+        else
+        {
+            left = pfsum[i-1];
+        }
+        
+        right = pfsum[n-1] - pfsum[i];
+        if(left == right)
+        {
+            count++;   
+        }
+    }
+    return count;
+}
+
+int specialIndex(int arr[], int n)
+{
+    int pfEvenSum[n] = {0};
+    int pfOddSum[n] = {0};
+    pfEvenSum[0] = arr[0];
+    pfOddSum[0] = 0;
+    
+    for(int i=1;i<n;i++)
+    {
+        if(i % 2 == 1)
+            pfEvenSum[i] = pfEvenSum[i-1];
+        else
+            pfEvenSum[i] = pfEvenSum[i-1] + arr[i];
+    }
+    
+    for(int i=1;i<n;i++)
+    {
+        if(i % 2 == 0)
+            pfOddSum[i] = pfOddSum[i-1];
+        else
+            pfOddSum[i] = pfOddSum[i-1] + arr[i];
+    }
+
+    int totalEvenSum = pfOddSum[n-1] - pfOddSum[0];
+    int totalOddSum = pfEvenSum[n-1] - pfEvenSum[0];
+    
+    if(totalOddSum == totalEvenSum)
+        return 0;
+    
+    for(int i=1;i<n;i++)
+    {
+        totalEvenSum = pfEvenSum[i-1] + pfOddSum[n-1] - pfOddSum[i];
+        totalOddSum = pfOddSum[i-1] + pfEvenSum[n-1] - pfEvenSum[i];
+        if(totalOddSum == totalEvenSum)
+            return i;
+    }
+    
+    return -1;
+
+}
+
+
+int main()
+{
+    //cout<<"Hello World";
+    //cout<<GetProcessStatInfo(1023);
+    // int arr[] = {3,-2,1,4,6,9,8};
+    // int k = 3;
+    // int n = sizeof(arr)/sizeof(arr[0]);
+    // int temp[n] = {0};
+    // //rightShift(arr, n, 3, temp);
+    // leftShift(arr, n , 3, temp);
+    
+    // for(int i=0;i<n;i++)
+    // {
+    //     cout<<temp[i]<<" ";
+    // }
+    
+    // unsigned char c= 4294967299;
+    // cout<<"char is: "<<c<<endl;
+    
+    //int arr[] = {1,2,3,4,5,6};
+    //int arr[] = {3, -1, 2, -1, 1, 2, 1};
+    int arr[] = {1, 2, 3, 4, 1, 2, 3};
+    int n = sizeof(arr)/sizeof(arr[0]);
+    
+    int pfsum[n] = {0};
+    pfsum[0] = arr[0];
+    for(int i=1;i<n;i++)
+    {
+        pfsum[i] = pfsum[i-1] + arr[i];
+    }
+    
+    for(int i=0;i<n;i++)
+    {
+        cout<<pfsum[i]<<" ";
+    }
+    
+    int pfEvenSum[n] = {0};
+    pfEvenSum[0] = arr[0];
+    
+    for(int i=1;i<n;i++)
+    {
+        if(i%2 == 1)
+            pfEvenSum[i] = pfEvenSum[i-1] ;
+        else
+            pfEvenSum[i] = pfEvenSum[i-1] + arr[i];
+    }
+    
+    for(int i=0;i<n;i++)
+    {
+        cout<<pfEvenSum[i]<<" ";
+    }
+    
+    int pfOddSum[n] = {0};
+    pfOddSum[0] = 0;
+    for(int i=1;i<n;i++)
+    {
+        if(i%2 == 0)
+            pfOddSum[i] = pfOddSum[i-1] ;
+        else
+            pfOddSum[i] = pfOddSum[i-1] + arr[i];
+    }
+    
+    for(int i=0;i<n;i++)
+    {
+        cout<<pfOddSum[i]<<" ";
+    }
+    
+    cout<<"sum between index 1 and 4 of arr is: "<<pfsum[4] - pfsum[0]<<endl;
+    cout<<"sum of first 4 numbers is: "<<pfsum[3]<<endl;
+    
+    cout<<"no of equalibrium indexes: "<<EqulibriumIndexes(arr, n)<<endl;
+    
+    cout<<"special index: "<<specialIndex(arr, n);
+    return 0;
+}
