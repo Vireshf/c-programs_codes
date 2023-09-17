@@ -1,0 +1,63 @@
+vector<int> maximumPositivity(int arr[], int n) 
+{
+    map<int, pair<int, int>> Map;
+    int count = 0;
+    int start_index = -1;
+    int end_index = -1;
+    int max_count = INT_MIN;
+    vector<int> vec;
+    int pos_check = 0;
+    for(int i=0;i<n;i++)
+    {
+        if(arr[i] > 0)
+        {
+            if(pos_check == 0)
+                start_index = i;
+            cout<<"start_index: "<<start_index<<" ";
+            count++;
+            pos_check++;
+        }
+        else{
+            pos_check = 0;
+            max_count = max(max_count, count);
+            end_index = i-1;
+            cout<<"end_index: "<<end_index<<" "<<endl;
+            Map.insert({count, make_pair(start_index, end_index)});
+            count = 0;
+        }
+    }
+    if(end_index < start_index)
+    {
+        max_count = max(max_count, count);
+        end_index = n-1;
+        cout<<"end_index: "<<end_index<<" "<<endl;
+        Map.insert({count, make_pair(start_index, end_index)});
+    }
+    else if(end_index == -1)
+    {
+        max_count = max(max_count, count);
+        end_index = n-1;
+        cout<<"end_index: "<<end_index<<" "<<endl;
+        Map.insert({count, make_pair(start_index, end_index)});
+    }
+    cout<<"max_count is: "<<max_count<<endl;
+    pair<int,int> p = Map[max_count];
+    //cout<<p.first<<" "<<p.second<<endl;
+    for(int i=p.first; i<=p.second; i++)
+    {
+        vec.push_back(arr[i]);
+    }
+    return vec;
+}
+
+int main()
+{
+    int arr1[] = {3, 4, 5, 6};
+    int k = 3;
+    int n = sizeof(arr1)/sizeof(arr1[0]);
+     for(auto it: maximumPositivity(arr1, n))
+     {
+         cout<<it<<" ";
+     }
+    cout<<endl;
+}
