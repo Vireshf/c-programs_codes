@@ -1,0 +1,75 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+
+using namespace std;
+
+void merge(int arr[], int l, int y, int r)
+{
+    int temp[r-l+1] = {0};
+    
+    int p1 = l, p2 = y;
+    int k = 0;
+    while(p1 < y && p2 <= r)
+    {
+        if(arr[p1] < arr[p2])
+        {
+            temp[k++] = arr[p1++];
+        }
+        else if(arr[p2] < arr[p1])
+        {
+            temp[k++] = arr[p2++];
+        }
+        else
+        {
+            temp[k++] = arr[p1++];
+            temp[k++] = arr[p2++];
+        }
+    }
+    
+    while(p1 < y)
+    {
+        temp[k++] = arr[p1++];
+    }
+    
+    while(p2 <= r)
+    {
+        temp[k++] = arr[p2++];
+    }
+    
+    for(int i=0;i<r-l+1;i++)
+    {
+        arr[l+i] = temp[i];
+    }
+}
+
+void mergeSort(int arr[], int low, int high) // 0 1
+{
+    int mid = (low + high)/2;
+    if(low < high)
+    {
+        mergeSort(arr, low, mid); 
+        mergeSort(arr, mid+1, high);
+        merge(arr, low, mid+1, high);  
+    }
+}
+
+int main()
+{
+    //cout<<"Hello World";
+    int arr[] = {4, 3, 3, 2, 5, 1, 6, 10, 7};
+    int low = 0, high = 8;
+    mergeSort(arr, low, high);
+    
+    for(int i=0;i<9;i++)
+    {
+        cout<<arr[i]<<" ";
+    }
+    return 0;
+}
