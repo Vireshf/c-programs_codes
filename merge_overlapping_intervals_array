@@ -1,0 +1,63 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <bits/stdc++.h>
+
+using namespace std;
+
+vector<vector<int>> mergeIntervals(vector<vector<int>> curList, vector<int> newList)
+{
+    int start = newList[0];
+    int end = newList[1];
+    vector<vector<int>> finalList;
+    
+    for(int i=0;i<curList.size();i++)
+    {
+        if(curList[i][1] < start)
+        {
+            finalList.push_back(curList[i]);
+        }
+        else if(curList[i][0] > end)
+        {
+            finalList.push_back(vector<int>{start, end});
+            while(i < curList.size())
+            {
+                finalList.push_back(curList[i]);
+                i++;
+            }
+            return finalList;
+        }
+        else
+        {
+           start = min(curList[i][0], start);
+           end = max(curList[i][1], end);
+        }
+    }
+    finalList.push_back(vector<int>{start, end});
+    return finalList;
+}
+
+int main()
+{
+    //cout<<"Hello World";
+    vector<vector<int>> curList = {{1,4}, {7,9}, {11,15}, {19,21}};
+    vector<int> newList = {5,12};
+    vector<vector<int>> finalList;
+    
+    
+    vector<vector<int>> resList = mergeIntervals(curList, newList);
+    for(auto it : resList)
+    {
+        for(auto itr : it)
+        {
+            cout<<itr<<" ";
+        }
+        cout<<endl;
+    }
+    return 0;
+}
