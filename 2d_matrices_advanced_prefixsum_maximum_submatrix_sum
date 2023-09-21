@@ -94,12 +94,18 @@ int maxSubMatrixSum(vector<vector<int>> vec)
             if(j == pfsum[0].size()-1)
             {
                 pfsum[i][j] = vec[i][j];
-                //cout<<pfsum[i][j]<<" ";
+                if(pfsum[i][j] > maxSum)
+                {
+                    maxSum = pfsum[i][j];
+                }
             }
             else
             {
                 pfsum[i][j] = pfsum[i][j+1] + vec[i][j];
-                //cout<<pfsum[i][j]<<" ";
+                if(pfsum[i][j] > maxSum)
+                {
+                    maxSum = pfsum[i][j];
+                }
             }
         }
         //cout<<endl;
