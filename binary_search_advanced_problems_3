@@ -1,0 +1,61 @@
+bool checkWorkersCanFinishTasks(vector<int> vec, int workers, int _time)
+{
+    int W = 1;
+    int current_work = 0;
+    //cout<<"mid is: "<<_time<<endl;
+    
+    for(int i=0;i<vec.size();i++)
+    {
+        current_work += vec[i];
+        
+        if(current_work > _time)
+        {
+            W += 1;
+            current_work = vec[i];
+        }
+        //cout<<"current_work is: "<<current_work<<endl;
+    }
+    //cout<<"workers needed: "<<W<<endl;
+    if(W > workers)
+    {
+        return false;
+    }
+    return true;
+}
+
+int painterPartitionProblem(vector<int> vec, int W, int N, int &ans)
+{
+    int low = 0;
+    int high = 0;
+    for(int i=0;i<vec.size();i++)
+    {
+        high += vec[i];
+    }
+    cout<<"high is: "<<high<<endl;
+    
+    while(low <=high)
+    {
+        int mid = (low + high)/2;
+        
+        if(checkWorkersCanFinishTasks(vec, W, mid))
+        {
+            ans = mid;
+            high = mid - 1;
+        }
+        else
+        {
+            low = mid + 1;
+        }
+    }
+    return ans;
+}
+
+int main()
+{
+    vector<int> vec = {3,5,1,7,8,2,5,3,10,1,4,7,5,4,6};
+    vector<int> vec1 = {3,5,1,7,8,2,5,3,10,1,4,7,5,4,6,5};
+    int workers = 3;
+    int tasks = vec1.size();
+    int ans = -1;
+    cout<<painterPartitionProblem(vec1, workers, tasks, ans);
+}
