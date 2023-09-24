@@ -1,0 +1,253 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <bits/stdc++.h>
+
+using namespace std;
+int ans = -1;
+int findNonRepeating(vector<int> vec)
+{
+    int low = 0;
+    int high = vec.size()-1;
+    
+    while(low <= high)
+    {
+        int mid = (low + high)/2;
+        
+        if(mid % 2 == 0)
+        {
+            if(vec[mid] == vec[mid+1])
+            {
+                low = mid + 1;
+            }
+            else
+            {
+                high = mid - 1;
+                ans = mid;
+            }
+        }
+        else
+        {
+            if(vec[mid] == vec[mid-1])
+            {
+                low = mid + 1;
+            }
+            else
+            {
+                high = mid - 1;
+                ans = mid;
+            }
+        }
+    }
+    return ans;
+}
+
+
+int findKInSortedArray(vector<int> arr, int k)    // 4 5 6 7 1 2 3   k = 2
+{
+    int low = 0;
+    int high = arr.size()-1;
+    
+    while(low <= high)
+    {
+        int mid = (low + high)/2;
+        
+        if(arr[mid] == k)
+        {
+            return mid;
+        }
+        else if(arr[low] <= arr[mid])
+        {
+            if(k < arr[mid] && k >= arr[low])
+            {
+                high = mid-1;
+            }
+            else
+            {
+                low = mid + 1;
+            }
+        }
+        else
+        {
+            if(k > arr[mid] && k <= arr[high])
+            {
+                low = mid + 1;
+            }
+            else
+            {
+                high = mid-1;
+            }
+        }
+    }
+    return -1;
+}
+
+void squareRootOfNumber(int N, int &ans)  //16
+{
+    int low = 1, high = N;
+    
+    while(low <= high)
+    {
+        int mid = (low + high)/2;
+        //cout<<"mid: "<<mid<<endl;
+        if(mid * mid == N)
+        {
+            ans = mid;
+            break;
+        }
+        else if(mid * mid > N)
+        {
+            high = mid - 1;
+        }
+        else
+        {
+            ans = mid;
+            low = mid + 1;
+        }
+    }
+}
+
+
+bool checkSubArraySumLessThanEqualK(vector<int> vec, int index, int target)
+{
+    int sum = 0;
+    for(int i=0;i<index;i++)
+    {
+        sum += vec[i];
+    }
+    cout<<"sum is: "<<sum<<"target is: "<<target<<endl;
+    if(sum > target)
+    {
+        return false;
+    }
+    
+    int k=0;
+    for(int i=index;i<vec.size();i++)
+    {
+        cout<<"i is: "<<i<<endl;
+        sum += vec[i];
+        sum -= vec[k++];
+        //cout<<"sum is: "<<sum<<endl;
+        if(sum > target)
+        {
+            //cout<<"sum in if is: "<<sum<<endl;
+            return false;
+        }
+    }
+    return true;
+}
+
+int maxSubArraySizeForSumLessThanEqualTarget(vector<int> vec, int target)
+{
+    int ans = 0;
+    for(int i=1;i<=vec.size();i++)
+    {
+        if(checkSubArraySumLessThanEqualK(vec, i, target))
+        {
+            ans = i;
+            cout<<"ans is: "<<ans<<endl;
+        }
+        else
+        {
+            break;
+        }
+    }
+    return ans;
+}
+
+
+int maxSubArraySizeForSumLessThanEqualTargetUsingBS(vector<int> vec, int target, int &ans)
+{
+    int low = 1, high = vec.size()-1;
+    
+    while(low <= high)
+    {
+        int mid = (low + high)/2;
+        if(checkSubArraySumLessThanEqualK(vec, mid, target))
+        {
+            ans = mid;
+            //cout<<"ans is: "<<ans<<endl;
+            low = mid + 1;
+        }
+        else
+        {
+            high = mid - 1;        
+        }
+    }
+    return ans;
+}
+
+int gcd(int a, int b)
+{
+    if(a == 0)
+    {
+        return b;
+    }
+    else if(b == 0)
+    {
+        return a;
+    }
+    
+    if(a > b)
+        return gcd(a%b, b);
+    else
+        return gcd(b%a, a);
+}
+
+int getCount(int A, int B, int mid)
+{
+    int LCM = (A * B)/gcd(A, B);
+    
+    return mid/A + mid/B - mid/LCM;
+}
+
+int NthMagicalNumber(int A, int B, int N, int ans)
+{
+    int low = min(A, B);
+    int high = N * min(A, B);
+    
+    while(low <= high)
+    {
+        int mid = (low + high)/2;
+        
+        int count = getCount(A, B, mid);
+        if(count == N)
+        {
+            ans = mid;
+            high = mid - 1;
+        }
+        else if(count < N)
+        {
+            low = mid + 1;
+        }
+        else
+        {
+            high = mid - 1;    
+        }
+    }
+    return ans;
+}
+
+
+int main()
+{
+    //vector<int> vec = {5,5,2,2,10,10,6,6,2,2,4};
+    
+    //cout<<findNonRepeating(vec);
+    //vector<int> vec1 = {4,5,6,7,1,2,3};
+    //int  k = 5;
+    //cout<<"finding "<<k<<" in rotatedSortedArray: " <<findKInSortedArray(vec1, 3)<<endl;
+    int ans = -1;
+    //squareRootOfNumber(6, ans);
+    //cout<<"square root of number is: "<<ans<<endl;
+    vector<int> vec = {3,2,5,4,6,3,7,2};int target = 20;
+    //cout<<maxSubArraySizeForSumLessThanEqualTarget(vec, target);
+    //cout<<maxSubArraySizeForSumLessThanEqualTargetUsingBS(vec, target, ans)<<endl;
+    cout<<NthMagicalNumber(5, 7, 3, ans);
+    return 0;
+}
